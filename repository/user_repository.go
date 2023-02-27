@@ -27,9 +27,9 @@ func (r *userRepository) Create(user model.User) error {
 // DeleteUser deletes an existing user
 func (r *userRepository) Delete(id string) error {
 	// Use GORM to delete the user
-	user := &model.User{}
+	user := model.User{}
 	user.UserWallet_ID = id
-	return r.db.Delete(user).Error
+	return r.db.Delete(user, id).Error
 }
 
 // GetByID retrieves a user by ID
