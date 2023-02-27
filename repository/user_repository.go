@@ -10,7 +10,7 @@ type UserRepository interface {
 	Create(user model.User) error
 	Update(user model.User) error
 	Delete(userWallet_ID string) error
-	GetByID(userWallet_ID string) (model.User, error)
+	GetByID(userWallet_ID string) (*model.User, error)
 	GetAll() ([]model.User, error)
 }
 
@@ -29,15 +29,18 @@ func (r *userRepository) Delete(id string) error {
 	// Use GORM to delete the user
 	user := model.User{}
 	user.UserWallet_ID = id
-	return r.db.Delete(user, id).Error
+	return r.db.Where("id = ?", id).Delete(&user).Error
 }
 
 // GetByID retrieves a user by ID
-func (r *userRepository) GetByID(id string) (model.User, error) {
+func (r *userRepository) GetByID(id string) (*model.User, error) {
 	// Use GORM to retrieve the user
 	user := model.User{}
-	err := r.db.First(user, id).Error
-	return user, err
+	err := r.db.Where("id = ?", id).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, err
 }
 
 // GetAll retrieves all users

@@ -13,7 +13,7 @@ type UserController struct {
 	usecase usecase.UserUseCase
 }
 
-func (cc *UserController) registerCustomer(ctx *gin.Context) {
+func (cc *UserController) registerUser(ctx *gin.Context) {
 	var user model.User
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
@@ -50,8 +50,8 @@ func NewCustomerController(r *gin.Engine, usecase usecase.UserUseCase) *UserCont
 		router:  r,
 		usecase: usecase,
 	}
-	r.GET("/customer", controller.getAllUser)
-	r.GET("/customer/:id", controller.getUserById)
-	r.POST("/customer", controller.registerCustomer)
+	r.GET("/Profile", controller.getAllUser)
+	r.GET("/Profile/:id", controller.getUserById)
+	r.POST("/Register", controller.registerUser)
 	return &controller
 }
