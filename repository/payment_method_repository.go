@@ -47,7 +47,7 @@ func (pmr *paymentMethodRepository) GetByID(PaymentMethod_ID string) (model.Paym
 		&paymentMethod.Method_name,
 	)
 	if err != nil {
-		return model.PaymentMethod{}, err
+		return model.PaymentMethod{},err
 	}
 	return paymentMethod, nil
 }
