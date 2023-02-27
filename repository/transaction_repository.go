@@ -1,5 +1,10 @@
 package repository
 
+import (
+	"INi-Wallet/model"
+
+	"github.com/jmoiron/sqlx"
+)
 
 type TransactionRepository interface {
 	GetByID(transaction_ID string) (model.Transaction, error)
@@ -11,7 +16,7 @@ type transactionRepository struct {
 	db *sqlx.DB
 }
 
-//GetByID
+// GetByID
 func (tr *transactionRepository) GetByID(transaction_ID string) (model.Transaction, error) {
 	var transaction model.Transaction
 	err := tr.db.QueryRow(utils.SELECT_TRANSACTION_ID, transaction_ID).Scan(
@@ -49,10 +54,9 @@ func (tr *transactionRepository) Delete(transaction_ID string) error {
 	return nil
 }
 
-//object
+// object
 func NewTransactionRepository(db *sqlx.DB) TransactionRepository {
 	return &transactionRepository{
 		db: db,
 	}
 }
->>>>>>> 70dbb88e8dcdea7190f7104e570f79f11b616a32

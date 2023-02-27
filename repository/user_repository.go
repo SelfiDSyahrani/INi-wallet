@@ -3,15 +3,17 @@ package repository
 import (
 	"INi-Wallet/model"
 	"INi-Wallet/utils"
+
 	"github.com/jmoiron/sqlx"
 )
 
 type UserRepository interface {
 	Insert(user *model.User) error
-	Update(user model.User) error
+	UpdateUserByID(id string) error
 	Delete(userWallet_ID string) error
 	GetByID(userWallet_ID string) (model.User, error)
 	GetAll() ([]model.User, error)
+	UpdateUserPass(id string, email string) error
 }
 
 type userRepository struct {
@@ -19,7 +21,7 @@ type userRepository struct {
 }
 
 // Creates a new user
-func (r *userRepository) Insert(newuser model.User) error {
+func (r *userRepository) Insert(newuser *model.User) error {
 	_, err := r.db.NamedExec(utils.INSERT_USER, newuser)
 	if err != nil {
 		return err
@@ -29,7 +31,7 @@ func (r *userRepository) Insert(newuser model.User) error {
 
 // DeleteUser deletes an existing user
 func (r *userRepository) Delete(user_ID string) error {
-	_, err := r.db.Exec(utils.DELETE_PAYMENT_METHOD, user_ID)
+	_, err := r.db.Exec(utils.DELETE_USER, user_ID)
 	if err != nil {
 		return err
 	}
@@ -37,19 +39,18 @@ func (r *userRepository) Delete(user_ID string) error {
 }
 
 // GetByID retrieves a user by ID
-//GetByID
-func (r *userRepository) GetByID(user_ID string) (model.user, error) {
+// GetByID
+func (r *userRepository) GetByID(user_ID string) (model.User, error) {
 	var user model.User
 	err := r.db.QueryRow(utils.SELECT_USER_ID, user_ID).Scan(
 		&user.UserWallet_ID,
-		&user.name,
+		&user.Name,
 	)
 	if err != nil {
 		return model.User{}, err
 	}
 	return user, nil
 }
-
 
 // GetAll retrieves all users
 func (r *userRepository) GetAll() ([]model.User, error) {
@@ -62,9 +63,21 @@ func (r *userRepository) GetAll() ([]model.User, error) {
 }
 
 // UpdateUser updates an existing user
-func (r *userRepository) Update(users model.User) error {
-	_, err := r.db.Exec(utils.UPDATE_USER, users)
-	return r.db.Save(users).Error
+func (r *userRepository) UpdateUserByID(Id string) error {
+	_, err := r.db.Exec(utils.UPDATE_USER_BY_ID, Id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdateUser updates an existing user
+func (r *userRepository) UpdateUserPass(Id string, email string) error {
+	_, err := r.db.Exec(utils.UPDATE_USER_PASS, Id, email)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func NewUserRepository(db *sqlx.DB) UserRepository {
