@@ -2,12 +2,12 @@ package repository
 
 import (
 	"INi-Wallet/model"
-
-	"gorm.io/gorm"
+	"INi-Wallet/utils"
+	"github.com/jmoiron/sqlx"
 )
 
 type UserRepository interface {
-	Create(user model.User) error
+	Insert(user *model.User) error
 	Update(user model.User) error
 	Delete(userWallet_ID string) error
 	GetByID(userWallet_ID string) (model.User, error)
@@ -15,48 +15,60 @@ type UserRepository interface {
 }
 
 type userRepository struct {
-	db *gorm.DB
+	db *sqlx.DB
 }
 
 // Creates a new user
-func (r *userRepository) Create(user model.User) error {
-	// Use GORM to save the user
-	return r.db.Create(user).Error
+func (r *userRepository) Insert(newuser model.User) error {
+	_, err := r.db.NamedExec(utils.INSERT_USER, newuser)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // DeleteUser deletes an existing user
-func (r *userRepository) Delete(id string) error {
-	// Use GORM to delete the user
-	user := &model.User{}
-	user.UserWallet_ID = id
-	return r.db.Delete(user).Error
+func (r *userRepository) Delete(user_ID string) error {
+	_, err := r.db.Exec(utils.DELETE_PAYMENT_METHOD, user_ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // GetByID retrieves a user by ID
-func (r *userRepository) GetByID(id string) (model.User, error) {
-	// Use GORM to retrieve the user
-	user := model.User{}
-	err := r.db.First(user, id).Error
-	return user, err
+//GetByID
+func (r *userRepository) GetByID(user_ID string) (model.user, error) {
+	var user model.User
+	err := r.db.QueryRow(utils.SELECT_USER_ID, user_ID).Scan(
+		&user.UserWallet_ID,
+		&user.name,
+	)
+	if err != nil {
+		return model.User{}, err
+	}
+	return user, nil
 }
+
 
 // GetAll retrieves all users
 func (r *userRepository) GetAll() ([]model.User, error) {
-	// Use GORM to retrieve all users
 	var users []model.User
-	err := r.db.Find(&users).Error
-	return users, err
+	err := r.db.Select(users, utils.SELECT_USER_LIST)
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 // UpdateUser updates an existing user
-func (r *userRepository) Update(user model.User) error {
-	// Use GORM to update the user
-	return r.db.Save(user).Error
+func (r *userRepository) Update(users model.User) error {
+	_, err := r.db.Exec(utils.UPDATE_USER, users)
+	return r.db.Save(users).Error
 }
 
-func NewUserRepository(db *gorm.DB) UserRepository {
+func NewUserRepository(db *sqlx.DB) UserRepository {
 	return &userRepository{
 		db: db,
 	}
 }
-
