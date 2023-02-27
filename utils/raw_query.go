@@ -8,6 +8,7 @@ const(
 	//UPDATE_PAYMENT_METHOD = "UPDATE payment_method set payment_method_id=$1,method_name =$2 where id=$3"
 	DELETE_PAYMENT_METHOD = "DELETE FROM payment_method where payment_method_id = $1"
 
+<<<<<<< HEAD
 	//transfer
 
 	//
@@ -21,3 +22,10 @@ const(
 
 
 )
+=======
+	//transaction
+	SELECT_TRANSACTION = "SELECT * FROM transactions"
+	SELECT_TRANSACTION_ID = "SELECT * FROM transactions where transaction_id = $1"
+	DELETE_TRANSACTION = "DELETE FROM transactions where transaction_id = $1"
+)
+>>>>>>> 70dbb88e8dcdea7190f7104e570f79f11b616a32
