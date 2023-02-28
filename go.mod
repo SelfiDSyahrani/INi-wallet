@@ -1,19 +1,8 @@
-<<<<<<< HEAD
-module INi-Wallet
-=======
 module dev_selfi
->>>>>>> dev_selfi
 
 go 1.19
 
 require (
-<<<<<<< HEAD
-	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/jinzhu/now v1.1.5 // indirect
-	github.com/jmoiron/sqlx v1.3.5 // indirect
-	github.com/joho/godotenv v1.5.1 // indirect
-	gorm.io/gorm v1.24.5 // indirect
-=======
 	github.com/bytedance/sonic v1.8.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
@@ -44,5 +33,4 @@ require (
 	golang.org/x/text v0.7.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
->>>>>>> dev_selfi
 )
