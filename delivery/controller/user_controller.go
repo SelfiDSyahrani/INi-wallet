@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"INi-Wallet/model"
-	"INi-Wallet/usecase"
+	"dev_selfi/dto"
+	"dev_selfi/usecase"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -14,12 +14,12 @@ type UserController struct {
 }
 
 func (cc *UserController) registerCustomer(ctx *gin.Context) {
-	var user model.User
+	user := &dto.UserRequestBody{}
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"err": err.Error()})
 		return
 	}
-	if err := cc.usecase.RegisterUser(user); err != nil {
+	if _, err := cc.usecase.RegisterUser(user); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"err": err.Error()})
 		return
 	}
@@ -45,13 +45,13 @@ func (cc *UserController) getUserById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, user)
 }
 
-func NewCustomerController(r *gin.Engine, usecase usecase.UserUseCase) *UserController {
+func NewUserController(r *gin.Engine, usecase usecase.UserUseCase) *UserController {
 	controller := UserController{
 		router:  r,
 		usecase: usecase,
 	}
-	r.GET("/customer", controller.getAllUser)
-	r.GET("/customer/:id", controller.getUserById)
-	r.POST("/customer", controller.registerCustomer)
+	r.GET("/user", controller.getAllUser)
+	r.GET("/user/:id", controller.getUserById)
+	r.POST("/register", controller.registerCustomer)
 	return &controller
 }
