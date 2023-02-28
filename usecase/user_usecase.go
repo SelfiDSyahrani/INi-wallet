@@ -5,9 +5,7 @@ import (
 	"dev_selfi/repository"
 	"dev_selfi/utils"
 	"net/mail"
-
 	"dev_selfi/dto"
-
 	"golang.org/x/crypto/bcrypt"
 )
 

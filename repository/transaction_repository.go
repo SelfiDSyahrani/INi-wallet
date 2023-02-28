@@ -1,7 +1,18 @@
 package repository
 
+import (
+	"context"
+	"dev_selfi/model"
+	"dev_selfi/utils"
+
+	"github.com/jmoiron/sqlx"
+)
+
 
 type TransactionRepository interface {
+	InsertTransactionTransfer(trasaction model.Transaction) error
+	InsertTransactionTopUp(trasaction model.Transaction) error
+	InsertTransactionPayment(trasaction model.Transaction) error
 	GetByID(transaction_ID string) (model.Transaction, error)
 	GetAll() ([]model.Transaction, error)
 	Delete(transaction_ID string) error
@@ -9,6 +20,96 @@ type TransactionRepository interface {
 
 type transactionRepository struct {
 	db *sqlx.DB
+}
+
+//insert transaksi transfer
+func (tr *transactionRepository) InsertTransactionTransfer(trasaction model.Transaction) error {
+	tx, err := tr.db.BeginTx(context.Background(), nil)
+	defer tx.Rollback()
+
+	_, err = tx.Exec(utils.)
+	if err != nil {
+		return err
+	}
+	return nil
+
+	tx, err = tr.db.BeginTx(context.Background(), nil)
+	defer tx.Rollback()
+
+	_, err = tx.Exec(utils.UPDATE_BALANCE_TRANSFER_USER)
+	if err != nil {
+		return err
+	}
+	return nil
+
+	tx, err = tr.db.BeginTx(context.Background(), nil)
+	_, err = tx.Query(utils.BALANCE_TRANSFER)
+	if err != nil {
+		return err
+
+	}
+	return nil
+	tx.Commit()
+	return nil
+}
+
+// insert transaction Top UP
+func (tr *transactionRepository) InsertTransactionTopUp(trasaction model.Transaction) error {
+	tx,err := tr.db.BeginTx(context.Background(),nil)
+	defer tx.Rollback()
+	_,err = tx.Exec(utils.INSERT_RECORDS_TOPUP)
+	if err != nil{
+		return err
+	}
+	return nil
+	tx, err = tr.db.BeginTx(context.Background(), nil)
+	defer tx.Rollback()
+
+	_, err = tx.Exec(utils.UPDATE_BALANCE_TOPUP)
+	if err != nil {
+		return err
+	}
+	return nil
+
+	tx, err = tr.db.BeginTx(context.Background(), nil)
+	_, err = tx.Query(utils.BALANCE_TOPUP)
+	if err != nil {
+		return err
+
+	}
+	return nil
+	tx.Commit()
+	return nil
+
+}
+// insert transaction payment
+func (tr *transactionRepository) InsertTransactionPayment(trasaction model.Transaction) error {
+	tx,err := tr.db.BeginTx(context.Background(),nil)
+	defer tx.Rollback()
+	_,err = tx.Exec(utils.INSERT_RECORDS_PAYMENT)
+	if err != nil{
+		return err
+	}
+	return nil
+	tx, err = tr.db.BeginTx(context.Background(), nil)
+	defer tx.Rollback()
+
+	_, err = tx.Exec(utils.UPDATE_BALANCE_PAYMENT)
+	if err != nil {
+		return err
+	}
+	return nil
+
+	tx, err = tr.db.BeginTx(context.Background(), nil)
+	_, err = tx.Query(utils.BALANCE_PAYMENT)
+	if err != nil {
+		return err
+
+	}
+	return nil
+	tx.Commit()
+	return nil
+
 }
 
 //GetByID
@@ -38,6 +139,7 @@ func (tr *transactionRepository) GetAll() ([]model.Transaction, error) {
 		return nil, err
 	}
 	return transactions, nil
+
 }
 
 // delete
@@ -55,4 +157,3 @@ func NewTransactionRepository(db *sqlx.DB) TransactionRepository {
 		db: db,
 	}
 }
->>>>>>> 70dbb88e8dcdea7190f7104e570f79f11b616a32
