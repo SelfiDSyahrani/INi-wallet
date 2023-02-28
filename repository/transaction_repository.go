@@ -8,7 +8,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-
 type TransactionRepository interface {
 	InsertTransactionTransfer(trasaction model.Transaction) error
 	InsertTransactionTopUp(trasaction model.Transaction) error
@@ -55,10 +54,10 @@ func (tr *transactionRepository) InsertTransactionTransfer(trasaction model.Tran
 
 // insert transaction Top UP
 func (tr *transactionRepository) InsertTransactionTopUp(trasaction model.Transaction) error {
-	tx,err := tr.db.BeginTx(context.Background(),nil)
+	tx, err := tr.db.BeginTx(context.Background(), nil)
 	defer tx.Rollback()
-	_,err = tx.Exec(utils.INSERT_RECORDS_TOPUP)
-	if err != nil{
+	_, err = tx.Exec(utils.INSERT_RECORDS_TOPUP)
+	if err != nil {
 		return err
 	}
 	return nil
@@ -82,12 +81,13 @@ func (tr *transactionRepository) InsertTransactionTopUp(trasaction model.Transac
 	return nil
 
 }
+
 // insert transaction payment
 func (tr *transactionRepository) InsertTransactionPayment(trasaction model.Transaction) error {
-	tx,err := tr.db.BeginTx(context.Background(),nil)
+	tx, err := tr.db.BeginTx(context.Background(), nil)
 	defer tx.Rollback()
-	_,err = tx.Exec(utils.INSERT_RECORDS_PAYMENT)
-	if err != nil{
+	_, err = tx.Exec(utils.INSERT_RECORDS_PAYMENT)
+	if err != nil {
 		return err
 	}
 	return nil
