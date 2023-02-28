@@ -4,6 +4,7 @@ import "dev_selfi/usecase"
 
 type UsecaseManager interface {
 	UserUseCase() usecase.UserUseCase
+	
 }
 type useCaseManager struct {
 	repoManager RepositoryManger

@@ -27,7 +27,7 @@ func (tr *transactionRepository) InsertTransactionTransfer(trasaction model.Tran
 	tx, err := tr.db.BeginTx(context.Background(), nil)
 	defer tx.Rollback()
 
-	_, err = tx.Exec(utils.)
+	_, err = tx.Exec(utils.INSERT_RECORDS_TRANSFER)
 	if err != nil {
 		return err
 	}
