@@ -24,7 +24,7 @@ const(
 
 	//payment
 	INSERT_RECORDS_PAYMENT = "INSERT INTO transactions (transaction_id,userwallet_id,money_changer_id,trasaction_type_id,amount,status,date_time) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
-	UPDATE_BALANCE_PAYMENT ="UPDATE users SET balance= balance - (SELECT amont SELECT amount FROM transactions WHERE transactions_ID=$1"
+	UPDATE_BALANCE_PAYMENT = "UPDATE users SET balance= balance - ((SELECT amount SELECT amount FROM transactions WHERE transactions_ID=$1) * (SELECT exchange_rate FROM money_changer WHERE money_changer_ID=$1))"
 	BALANCE_PAYMENT = "SELECT *FROM users WHERE userWallet_ID" 
 
 )
