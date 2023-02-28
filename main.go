@@ -1,7 +1,7 @@
 package main
 
-import "fmt"
+import "dev_selfi/delivery"
 
 func main() {
-	fmt.Println("tes")
+	delivery.Server().Run()
 }

@@ -11,11 +11,12 @@ const(
 	//transfer
 
 	//
-	INSERT_USER = "INSERT INTO user (userWallet_ID, name, email, phone, password) values ($!,$2, $3, $4, $5)"
+	INSERT_USER = "INSERT INTO user (userWallet_ID, name, email, phone, password, balance) values ($!,$2, $3, $4, $5, $6)"
 	DELETE_USER = "DELETE FROM user where userWallet_ID = $1"
 	SELECT_USER_ID = "SELECT * FROM user where userWallet_ID = $1"
 	SELECT_USER_LIST = "SELECT * FROM payment_method"
-	UPDATE_USER= "UPDATE payment_method set "
+	UPDATE_USER_BY_ID= "UPDATE user set set name=$1, balance=$2 where id=$3"
+	UPDATE_USER_PASS= "UPDATE user set set password where id=$1 AND email=$2"
 
 
 

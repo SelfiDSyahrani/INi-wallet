@@ -1,17 +1,20 @@
 package repository
 
 import (
-	"INi-Wallet/model"
-	"INi-Wallet/utils"
+	"dev_selfi/model"
+	"dev_selfi/utils"
+
 	"github.com/jmoiron/sqlx"
 )
 
 type UserRepository interface {
-	Insert(user *model.User) error
-	Update(user model.User) error
 	Delete(userWallet_ID string) error
+	FindByEmail(email string) (*model.User, error)
 	GetByID(userWallet_ID string) (model.User, error)
 	GetAll() ([]model.User, error)
+	Insert(user *model.User) (*model.User, error)
+	UpdateById(user model.User) error
+	
 }
 
 type userRepository struct {
@@ -19,12 +22,13 @@ type userRepository struct {
 }
 
 // Creates a new user
-func (r *userRepository) Insert(newuser model.User) error {
-	_, err := r.db.NamedExec(utils.INSERT_USER, newuser)
+func (r *userRepository) Insert(user *model.User) (*model.User, error) {
+	query := "INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id"
+	err := r.db.QueryRow(query, user.Name, user.Email, user.Password).Scan(&user.UserWallet_ID)
 	if err != nil {
-		return err
+		return user, err
 	}
-	return nil
+	return user, nil
 }
 
 // DeleteUser deletes an existing user
@@ -37,19 +41,18 @@ func (r *userRepository) Delete(user_ID string) error {
 }
 
 // GetByID retrieves a user by ID
-//GetByID
-func (r *userRepository) GetByID(user_ID string) (model.user, error) {
+// GetByID
+func (r *userRepository) GetByID(user_ID string) (model.User, error) {
 	var user model.User
 	err := r.db.QueryRow(utils.SELECT_USER_ID, user_ID).Scan(
 		&user.UserWallet_ID,
-		&user.name,
+		&user.Name,
 	)
 	if err != nil {
 		return model.User{}, err
 	}
 	return user, nil
 }
-
 
 // GetAll retrieves all users
 func (r *userRepository) GetAll() ([]model.User, error) {
@@ -61,10 +64,21 @@ func (r *userRepository) GetAll() ([]model.User, error) {
 	return users, nil
 }
 
-// UpdateUser updates an existing user
-func (r *userRepository) Update(users model.User) error {
-	_, err := r.db.Exec(utils.UPDATE_USER, users)
-	return r.db.Save(users).Error
+func (r *userRepository) UpdateById(user model.User) error {
+	_,err := r.db.NamedExec(utils.UPDATE_USER_BY_ID,user)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *userRepository) FindByEmail(email string) (*model.User, error) {
+	users := model.User{}
+	err := r.db.Select(users, "SELECT * FROM users WHERE Email=$1", email)
+	if err != nil {
+		return nil, err
+	}
+	return &users, err
 }
 
 func NewUserRepository(db *sqlx.DB) UserRepository {

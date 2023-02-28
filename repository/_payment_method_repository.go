@@ -1,12 +1,10 @@
 package repository
 
 import (
-	"INi-Wallet/model"
-	"INi-Wallet/utils"
+	"dev_selfi/model"
+	"dev_selfi/utils"
 
 	"github.com/jmoiron/sqlx"
-	//"gorm.io/gorm"
-	//"gorm.io/gorm/utils"
 )
 
 type PaymentMethodRepository interface {
@@ -39,7 +37,7 @@ func (pmr *paymentMethodRepository) Delete(PaymentMethod_ID string) error {
 	return nil
 }
 
-//GetByID
+// GetByID
 func (pmr *paymentMethodRepository) GetByID(PaymentMethod_ID string) (model.PaymentMethod, error) {
 	var paymentMethod model.PaymentMethod
 	err := pmr.db.QueryRow(utils.SELECT_PAYMENT_METHOD_ID, PaymentMethod_ID).Scan(
@@ -52,7 +50,7 @@ func (pmr *paymentMethodRepository) GetByID(PaymentMethod_ID string) (model.Paym
 	return paymentMethod, nil
 }
 
-//GetAll
+// GetAll
 func (pmr *paymentMethodRepository) GetAll() ([]model.PaymentMethod, error) {
 	var paymentMethods []model.PaymentMethod
 	err := pmr.db.Select(paymentMethods, utils.SELECT_PAYMENT_METHOD_LIST)
@@ -71,7 +69,7 @@ func (pmr *paymentMethodRepository) GetAll() ([]model.PaymentMethod, error) {
 	return nil
 } */
 
-//object
+// object
 func NewPaymentMethodRepository(db *sqlx.DB) PaymentMethodRepository {
 	return &paymentMethodRepository{
 		db: db,
