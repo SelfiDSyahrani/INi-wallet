@@ -4,6 +4,7 @@ import (
 	"context"
 	"dev_selfi/model"
 	"dev_selfi/utils"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -90,23 +91,18 @@ func (tr *transactionRepository) InsertTransactionPayment(trasaction model.Trans
 	if err != nil {
 		return err
 	}
-	return nil
-	tx, err = tr.db.BeginTx(context.Background(), nil)
-	defer tx.Rollback()
 
 	_, err = tx.Exec(utils.UPDATE_BALANCE_PAYMENT)
 	if err != nil {
 		return err
 	}
-	return nil
 
-	tx, err = tr.db.BeginTx(context.Background(), nil)
 	_, err = tx.Query(utils.BALANCE_PAYMENT)
 	if err != nil {
 		return err
 
 	}
-	return nil
+
 	tx.Commit()
 	return nil
 
@@ -117,7 +113,7 @@ func (tr *transactionRepository) GetByID(transaction_ID string) (model.Transacti
 	var transaction model.Transaction
 	err := tr.db.QueryRow(utils.SELECT_TRANSACTION_ID, transaction_ID).Scan(
 		&transaction.Transaction_ID,
-		&transaction.User_ID,
+		&transaction.Userwallet_id,// di ubah
 		&transaction.Money_Changer_ID,
 		&transaction.Transaction_Type_ID,
 		&transaction.Payment_method_id,
@@ -134,8 +130,9 @@ func (tr *transactionRepository) GetByID(transaction_ID string) (model.Transacti
 // GetAll
 func (tr *transactionRepository) GetAll() ([]model.Transaction, error) {
 	var transactions []model.Transaction
-	err := tr.db.Select(transactions, utils.SELECT_TRANSACTION)
+	err := tr.db.Select(&transactions, utils.SELECT_TRANSACTION)
 	if err != nil {
+		log.Println("error repo =", err)
 		return nil, err
 	}
 	return transactions, nil

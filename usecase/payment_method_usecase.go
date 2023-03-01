@@ -20,3 +20,8 @@ func (pmu * paymentMethodUsecase) PaymentMethodGetByID(PaymentMethod_ID string) 
 func (pmu * paymentMethodUsecase) PaymentMethodGetAll() ([]model.PaymentMethod, error) {
 	return pmu.paymentMethodRepo.GetAll()
 }
+func NewPaymentMethod(paymentMethodRepo repository.PaymentMethodRepository) PaymentMethodUsecase  {
+	return &paymentMethodUsecase{
+	paymentMethodRepo :paymentMethodRepo,
+	}
+}

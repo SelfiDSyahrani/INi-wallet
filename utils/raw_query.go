@@ -17,7 +17,7 @@ const (
 	//transaction
 	//transfer
 	INSERT_RECORDS_TRANSFER      = "INSERT INTO transactions (transaction_id,userwallet_id,money_changer_id,trasaction_type_id,amount,status,date_time) VALUES ($1,$2,$3,$4,$5,$6,$7,$8)"
-	UPDATE_BALANCE_TRANSFER_USER = "UPDATE users SET balance= balance - (SELECT * amount FROM transactions WHERE transactions_ID=$1) WHERE userwallet_id=$2"
+	UPDATE_BALANCE_TRANSFER_USER = "UPDATE users set balance = balance - $1"
 	BALANCE_TRANSFER             = "SELECT *FROM users WHERE userWallet_ID"
 
 	//topup

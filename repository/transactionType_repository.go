@@ -37,3 +37,9 @@ func (tp *trasactionTypeRepository) GetAll() ([]model.TransactionType, error) {
 	return transactionTypes, nil
 
 }
+
+func NewTransactionTypeRepository(db * sqlx.DB) TransactionTypeRepository {
+	return &trasactionTypeRepository{
+		db: db,
+	}
+}

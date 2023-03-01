@@ -1,12 +1,11 @@
 package config
 
 import (
-	"log"
-
 	"fmt"
+	"os"
+
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"os"
 )
 
 type Config struct {

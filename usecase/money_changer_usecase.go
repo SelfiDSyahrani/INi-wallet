@@ -19,5 +19,14 @@ func (mcu *moneyChangerUsecase) MoneyChangerById(MoneyChanger_ID string) (model.
 }
 
 func (mcu *moneyChangerUsecase) MoneyChangerAll() ([]model.MoneyChanger, error) {
-	return mcu.moneyChangerRepo.GetAll()
+	var moneyChangerList []model.MoneyChanger
+	moneyChangerList,err := mcu.moneyChangerRepo.GetAll()
+	return moneyChangerList,err
+}
+
+
+func NewMoneyChanger(moneyChangerRepo repository.MoneyChangerRepository) MoneyChangerUsecase {
+	return &moneyChangerUsecase{
+		moneyChangerRepo: moneyChangerRepo,
+	}
 }

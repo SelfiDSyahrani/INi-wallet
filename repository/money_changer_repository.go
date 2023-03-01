@@ -3,6 +3,7 @@ package repository
 import (
 	"dev_selfi/model"
 	"dev_selfi/utils"
+	"log"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -19,7 +20,7 @@ type moneyChangerRepository struct {
 func (mc *moneyChangerRepository)GetByID(MoneyChanger_ID string) (model.MoneyChanger, error) {
 	var MoneyChanger model.MoneyChanger
 	err := mc.db.QueryRow(utils.SELECT_MONEY_CHANGER_ID,MoneyChanger_ID).Scan(
-	 &MoneyChanger.Money_changer_ID,
+	 &MoneyChanger.Money_changer_id,
 	 &MoneyChanger.Name,
 	 &MoneyChanger.Exchange_rate,
 	 &MoneyChanger.Currency_type,
@@ -34,10 +35,18 @@ func (mc *moneyChangerRepository)GetByID(MoneyChanger_ID string) (model.MoneyCha
 
 func (mc *moneyChangerRepository ) GetAll() ([]model.MoneyChanger, error) {
 	var moneyChanger []model.MoneyChanger
-	err := mc.db.Select(moneyChanger, utils.SELECT_TRANSACTION)
+	err := mc.db.Select(&moneyChanger, utils.SELECT_TRANSACTION)
 	if err != nil {
+		log.Println("error repo =", err)
 		return nil, err
 	}
 	return moneyChanger, nil
 
+}
+
+func NewMoneyChanger(db * sqlx.DB) MoneyChangerRepository {
+	return &moneyChangerRepository{
+		db: db,
+	}
+	
 }

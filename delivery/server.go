@@ -27,6 +27,8 @@ func Server() *appServer {
 
 func (a *appServer) initHandlers() {
 	controller.NewUserController(a.engine, a.useCaseManager.UserUseCase())
+	controller.NewControllerTransaksi(a.engine,a.useCaseManager.TransactionUscase())
+	controller.NewMoneyChangerController(a.engine,a.useCaseManager.MoneyChangerUsecase())
 	// controller.NewStoreController(a.engine, a.useCaseManager.StoreUseCase(), a.useCaseManager.ProductUseCase())
 }
 
