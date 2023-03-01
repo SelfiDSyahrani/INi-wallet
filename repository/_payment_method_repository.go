@@ -1,12 +1,5 @@
 package repository
 
-import (
-	"dev_selfi/model"
-	"dev_selfi/utils"
-
-	"github.com/jmoiron/sqlx"
-)
-
 type PaymentMethodRepository interface {
 	Insert(newPaymentMethod model.PaymentMethod) error
 	Delete(PaymentMethod_ID string) error
@@ -45,11 +38,7 @@ func (pmr *paymentMethodRepository) GetByID(PaymentMethod_ID string) (model.Paym
 		&paymentMethod.Method_name,
 	)
 	if err != nil {
-<<<<<<< HEAD
-		return model.PaymentMethod{}, err
-=======
 		return model.PaymentMethod{},err
->>>>>>> 70dbb88e8dcdea7190f7104e570f79f11b616a32
 	}
 	return paymentMethod, nil
 }

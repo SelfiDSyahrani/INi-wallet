@@ -1,6 +1,6 @@
 package main
 
-import "dev_selfi/delivery"
+import "INi-Wallet/delivery"
 
 func main() {
 	delivery.Server().Run()

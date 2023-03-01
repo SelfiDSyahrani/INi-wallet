@@ -1,12 +1,7 @@
 package dto
 
-import "dev_selfi/model"
+import "INi-Wallet/model"
 
-type UserRequestBody struct {
-	Name     string `json:"name" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-}
 
 type UserRequestParams struct {
 	UserWallet_ID string `uri:"id" binding:"required"`
@@ -25,7 +20,7 @@ type UserResponseBody struct {
 
 func FormatUser(user *model.User) UserResponseBody {
 	formattedUser := UserResponseBody{}
-	formattedUser.ID = user.UserWallet_ID
+	formattedUser.ID = user.ID
 	formattedUser.Name = user.Name
 	formattedUser.Email = user.Email
 	return formattedUser

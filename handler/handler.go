@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"dev_selfi/service"
-	"dev_selfi/usecase"
+	"INi-Wallet/service"
+	"INi-Wallet/usecase"
 )
 
 type Handler struct {

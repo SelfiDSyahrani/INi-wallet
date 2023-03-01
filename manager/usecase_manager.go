@@ -1,6 +1,6 @@
 package manager
 
-import "dev_selfi/usecase"
+import "INi-Wallet/usecase"
 
 type UsecaseManager interface {
 	UserUseCase() usecase.UserUseCase

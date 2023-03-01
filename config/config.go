@@ -1,5 +1,14 @@
 package config
 
+import (
+	"fmt"
+	"os"
+
+	"github.com/jmoiron/sqlx"
+	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
+)
+
 type Config struct {
 	DataSourceName string
 }

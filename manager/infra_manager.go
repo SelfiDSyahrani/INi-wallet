@@ -1,7 +1,7 @@
 package manager
 
 import (
-	"dev_selfi/config"
+	"INi-Wallet/config"
 
 	"github.com/jmoiron/sqlx"
 )

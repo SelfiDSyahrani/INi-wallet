@@ -1,8 +1,6 @@
 package manager
 
-import (
-	"dev_selfi/repository"
-)
+import "INi-Wallet/repository"
 
 type RepositoryManger interface {
 	UserRepository() repository.UserRepository

@@ -1,9 +1,16 @@
 package dto
 
-import "dev_selfi/model"
+import "INi-Wallet/model"
 
 type LoginRequestBody struct {
-	Email    string `json:"email" binding:"required"`
+	Email    string `json:"email" binding:"required,email"`
+	Password string `json:"password" binding:"required,min=5"`
+}
+
+type RegisterRequestBody struct {
+	Name     string `json:"name" binding:"required,alphanum"`
+	Email    string `json:"email" binding:"required,email"`
+	Phone    string `json:"phone" binding:"required,phone"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -16,7 +23,7 @@ type LoginResponseBody struct {
 
 func FormatLogin(user *model.User, token string) LoginResponseBody {
 	return LoginResponseBody{
-		ID:    user.UserWallet_ID,
+		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
 		Token: token,

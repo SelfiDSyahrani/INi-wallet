@@ -1,23 +1,24 @@
 package usecase
 
 import (
-	"dev_selfi/model"
-	"dev_selfi/repository"
-	"dev_selfi/utils"
+	"INi-Wallet/dto"
+	"INi-Wallet/model"
+	"INi-Wallet/repository"
+	"INi-Wallet/utils"
 	"net/mail"
-
-	"dev_selfi/dto"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 // User Use Case
 type UserUseCase interface {
-	RegisterUser(input *dto.UserRequestBody) (*model.User, error)
+	RegisterUser(input *model.User) error
+	GetByEmail(email string) (model.User, error)
 	GetUserByID(id string) (model.User, error)
 	GetAllUsers() ([]model.User, error)
 	UpdateUser(user model.User) error
 	DeleteUser(id string) error
+	Login(input *dto.LoginRequestBody) (model.User, error)
 }
 
 // User Use Case implementation
@@ -29,32 +30,22 @@ type USConfig struct {
 	UserRepository repository.UserRepository
 }
 
-func (u *userUseCase) RegisterUser(input *dto.UserRequestBody) (*model.User, error) {
-	_, err := mail.ParseAddress(input.Email)
-	if err != nil {
-		return &model.User{}, err
+func (u *userUseCase) RegisterUser(input *model.User) error {
+	if _, err := u.userRepo.FindByEmail(input.Email); err == nil {
+		return &utils.UserAlreadyExistsError{}
 	}
-	user, err := u.userRepo.FindByEmail(input.Email)
-	if err != nil {
-		return user, &utils.NotValidEmailError{}
-	}
-	if user.Email == input.Email {
-		return user, &utils.UserAlreadyExistsError{}
-	}
-	user.UserWallet_ID = utils.GenerateId()
-	user.Name = input.Name
-	user.Email = input.Email
+	input.ID = utils.GenerateId()
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.Password), bcrypt.MinCost)
 	if err != nil {
-		return user, err
+		return err
 	}
-	user.Password = string(passwordHash)
+	input.Password = string(passwordHash)
+	input.Balance = 0
+	return u.userRepo.Insert(input)
+}
 
-	newUser, err := u.userRepo.Insert(user)
-	if err != nil {
-		return newUser, err
-	}
-	return newUser, nil
+func (u *userUseCase) GetByEmail(email string) (model.User, error) {
+	return u.userRepo.FindByEmail(email)
 }
 
 func (u *userUseCase) GetUserByID(id string) (model.User, error) {
@@ -71,6 +62,23 @@ func (u *userUseCase) UpdateUser(user model.User) error {
 
 func (u *userUseCase) DeleteUser(id string) error {
 	return u.userRepo.Delete(id)
+}
+
+func (s *userUseCase) Login(input *dto.LoginRequestBody) (model.User, error) {
+	_, err := mail.ParseAddress(input.Email)
+	if err != nil {
+		return model.User{}, &utils.NotValidEmailError{}
+	}
+	user, err := s.userRepo.FindByEmail(input.Email)
+	if err != nil {
+		return user, err
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password))
+	if err != nil {
+		return user, &utils.IncorrectCredentialsError{}
+	}
+
+	return user, nil
 }
 
 func NewUserUseCase(userRepo repository.UserRepository) UserUseCase {

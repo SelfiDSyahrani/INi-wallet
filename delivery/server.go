@@ -1,9 +1,9 @@
 package delivery
 
 import (
-	"dev_selfi/config"
-	"dev_selfi/delivery/controller"
-	"dev_selfi/manager"
+	"INi-Wallet/config"
+	"INi-Wallet/delivery/controller"
+	"INi-Wallet/manager"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,6 +14,7 @@ type appServer struct {
 }
 
 func Server() *appServer {
+
 	ginEngine := gin.Default()
 	config := config.NewConfig()
 	infra := manager.NewInfraManager(config)
@@ -23,10 +24,13 @@ func Server() *appServer {
 		engine:         ginEngine,
 		useCaseManager: usecase,
 	}
+
 }
 
 func (a *appServer) initHandlers() {
+
 	controller.NewUserController(a.engine, a.useCaseManager.UserUseCase())
+
 	// controller.NewStoreController(a.engine, a.useCaseManager.StoreUseCase(), a.useCaseManager.ProductUseCase())
 }
 
