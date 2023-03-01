@@ -3,7 +3,8 @@ package controller
 import (
 	"INi-Wallet/dto"
 	"INi-Wallet/model"
-	"INi-Wallet/service"
+
+	// "INi-Wallet/service"
 	"INi-Wallet/usecase"
 	"INi-Wallet/utils"
 
@@ -17,26 +18,33 @@ import (
 
 type UserController struct {
 	userUC usecase.UserUseCase
-	jwt    service.JWTService
+	// jwt    service.JWTService
 }
 
 func (cc *UserController) loginUser(ctx *gin.Context) {
-	input := &dto.LoginRequestBody{}
-	err := ctx.ShouldBindJSON(input)
+	input := dto.LoginRequestBody{}
+	err := ctx.ShouldBindJSON(&input)
 	if err != nil {
 		utils.HandleBadRequest(ctx, err.Error())
 	} else {
-		user, err := cc.userUC.Login(input)
+		user, err := cc.userUC.Login(&input)
 		if err != nil {
-			utils.HandleInternalServerError(ctx, err.Error())
-		}
-		tokenUser, err := cc.jwt.GenerateToken(user.ID)
-		if err != nil {
-			utils.HandleInternalServerError(ctx, err.Error())
+			utils.HandleInternalServerError(ctx, "Salah password")
 		} else {
-			formatedLogin := dto.FormatLogin(&user, tokenUser)
-			utils.HandleSuccess(ctx, "Login success", formatedLogin)
+			userTampilan := &dto.UserResponseBody{}
+			userTampilan.Name = user.Name
+			userTampilan.Email = user.Email
+			userTampilan.ID = user.ID
+			utils.HandleSuccessCreated(ctx, "Success log-in", userTampilan)
 		}
+
+		// tokenUser, err := cc.jwt.GenerateToken(user.ID)
+		// if err != nil {
+		// 	utils.HandleInternalServerError(ctx, "Gagal generate token")
+		// } else {
+		// 	formatedLogin := dto.FormatLogin(&user, tokenUser)
+		// 	utils.HandleSuccess(ctx, "Login success", formatedLogin)
+		// }
 
 	}
 
@@ -105,7 +113,7 @@ func NewUserController(router *gin.Engine, usecase usecase.UserUseCase) *UserCon
 		userUC: usecase,
 	}
 
-	rG := router.Group("api/v1/INi-Wallet")
+	rG := router.Group("api/v1/eWallet")
 	rG.GET("/user", newcontroller.getAllUser)
 	rG.GET("/user/:id", newcontroller.getUserById)
 	rG.GET("/users/:email", newcontroller.getByEmail)

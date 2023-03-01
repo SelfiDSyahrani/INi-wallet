@@ -5,7 +5,8 @@ import (
 	"INi-Wallet/model"
 	"INi-Wallet/repository"
 	"INi-Wallet/utils"
-	"net/mail"
+
+	// "net/mail"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -65,10 +66,10 @@ func (u *userUseCase) DeleteUser(id string) error {
 }
 
 func (s *userUseCase) Login(input *dto.LoginRequestBody) (model.User, error) {
-	_, err := mail.ParseAddress(input.Email)
-	if err != nil {
-		return model.User{}, &utils.NotValidEmailError{}
-	}
+	// _, err := mail.ParseAddress(input.Email)
+	// if err != nil {
+	// 	return model.User{}, &utils.NotValidEmailError{}
+	// }
 	user, err := s.userRepo.FindByEmail(input.Email)
 	if err != nil {
 		return user, err
@@ -77,7 +78,6 @@ func (s *userUseCase) Login(input *dto.LoginRequestBody) (model.User, error) {
 	if err != nil {
 		return user, &utils.IncorrectCredentialsError{}
 	}
-
 	return user, nil
 }
 

@@ -2,7 +2,6 @@ package dto
 
 import "INi-Wallet/model"
 
-
 type UserRequestParams struct {
 	UserWallet_ID string `uri:"id" binding:"required"`
 }
@@ -13,9 +12,10 @@ type UserRequestQuery struct {
 }
 
 type UserResponseBody struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	ID      string  `json:"id"`
+	Name    string  `json:"name"`
+	Email   string  `json:"email"`
+	Balance float64 `json:"balance"`
 }
 
 func FormatUser(user *model.User) UserResponseBody {
