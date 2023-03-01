@@ -1,6 +1,9 @@
 package dto
 
-import "INi-Wallet/model"
+import (
+	"INi-Wallet/model"
+	"time"
+)
 
 type UserRequestParams struct {
 	UserWallet_ID string `uri:"id" binding:"required"`
@@ -16,6 +19,21 @@ type UserResponseBody struct {
 	Name    string  `json:"name"`
 	Email   string  `json:"email"`
 	Balance float64 `json:"balance"`
+}
+type ForgotPasswordRequestBody struct {
+	Email       string `json:"email" binding:"required,email"`
+	NewPassword string `json:"password" binding:"required,password"`
+}
+
+type ForgotPasswordResponseBody struct {
+	Email string `json:"email"`
+	Token string `json:"token"`
+}
+
+type PasswordReset struct {
+	Email     string
+	Token     string
+	ExpiredAt time.Time
 }
 
 func FormatUser(user *model.User) UserResponseBody {
@@ -33,4 +51,11 @@ func FormatUsers(authors []*model.User) []UserResponseBody {
 		formattedUsers = append(formattedUsers, formattedUser)
 	}
 	return formattedUsers
+}
+
+func FormatForgotPassword(passwordReset PasswordReset) ForgotPasswordResponseBody {
+	return ForgotPasswordResponseBody{
+		Email: passwordReset.Email,
+		Token: passwordReset.Token,
+	}
 }

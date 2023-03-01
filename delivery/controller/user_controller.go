@@ -17,7 +17,8 @@ import (
 )
 
 type UserController struct {
-	userUC usecase.UserUseCase
+	userUC        usecase.UserUseCase
+	// tokenGenerate utils.TokenUtils
 	// jwt    service.JWTService
 }
 
@@ -79,6 +80,20 @@ func (cc *UserController) registerCustomer(ctx *gin.Context) {
 	}
 }
 
+func (cc *UserController) forgotPass(ctx *gin.Context) {
+	input := dto.ForgotPasswordRequestBody{}
+	err := ctx.ShouldBindJSON(&input)
+	if err != nil {
+		utils.HandleBadRequest(ctx, err.Error())
+	} else {
+		err := cc.userUC.ForgotPass(&input)
+		if err != nil {
+			utils.HandleInternalServerError(ctx, "gagal perbarui password")
+		}
+		utils.HandleSuccessCreated(ctx, "Success Reset Password", input)
+	}
+
+}
 func (cc *UserController) getAllUser(ctx *gin.Context) {
 	users, err := cc.userUC.GetAllUsers()
 	if err != nil {
@@ -112,12 +127,13 @@ func NewUserController(router *gin.Engine, usecase usecase.UserUseCase) *UserCon
 	newcontroller := UserController{
 		userUC: usecase,
 	}
-
 	rG := router.Group("api/v1/eWallet")
-	rG.GET("/user", newcontroller.getAllUser)
+	rG.GET("/users", newcontroller.getAllUser)
 	rG.GET("/user/:id", newcontroller.getUserById)
-	rG.GET("/users/:email", newcontroller.getByEmail)
+	rG.GET("/user/:email", newcontroller.getByEmail)
 	rG.POST("/register", newcontroller.registerCustomer)
 	rG.POST("/login", newcontroller.loginUser)
+	// rG2 := router.Group("api/v1/eWallet/user:id", newcontroller.getUserById)
+	rG.POST("/forgetPassword", newcontroller.forgotPass)
 	return &newcontroller
 }

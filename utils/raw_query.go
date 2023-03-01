@@ -17,5 +17,5 @@ const (
 	SELECT_USER_LIST  = "SELECT * FROM users"
 	SELECT_BY_EMAIL   = "SELECT * FROM users where email = $1"
 	UPDATE_USER_BY_ID = "UPDATE users set name=$1, balance=$2 where id=$3"
-	UPDATE_USER_PASS  = "UPDATE users set password where userWallet_id=$1 AND email=$2"
+	UPDATE_USER_PASS  = "UPDATE users set password=$1 where email=$2"
 )

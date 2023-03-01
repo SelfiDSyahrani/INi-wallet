@@ -14,6 +14,7 @@ type UserRepository interface {
 	GetAll() ([]model.User, error)
 	Insert(user *model.User) error
 	UpdateById(user model.User) error
+	UpdateByEmail(user model.User) error 
 }
 
 type userRepository struct {
@@ -74,6 +75,14 @@ func (r *userRepository) UpdateById(user model.User) error {
 	}
 	return nil
 }
+func (r *userRepository) UpdateByEmail(user model.User) error {
+	_, err := r.db.NamedExec(utils.UPDATE_USER_PASS, user)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 
 func (r *userRepository) FindByEmail(email string) (model.User, error) {
 	var user model.User

@@ -5,6 +5,7 @@ import (
 	"INi-Wallet/model"
 	"INi-Wallet/repository"
 	"INi-Wallet/utils"
+	"fmt"
 
 	// "net/mail"
 
@@ -20,6 +21,7 @@ type UserUseCase interface {
 	UpdateUser(user model.User) error
 	DeleteUser(id string) error
 	Login(input *dto.LoginRequestBody) (model.User, error)
+	ForgotPass(input *dto.ForgotPasswordRequestBody) error
 }
 
 // User Use Case implementation
@@ -63,6 +65,25 @@ func (u *userUseCase) UpdateUser(user model.User) error {
 
 func (u *userUseCase) DeleteUser(id string) error {
 	return u.userRepo.Delete(id)
+}
+
+func (u *userUseCase) ForgotPass(input *dto.ForgotPasswordRequestBody) error {
+	var userForgotPass model.User
+	var err error
+	userForgotPass, err = u.userRepo.FindByEmail(input.Email)
+	if err != nil {
+		return err
+	}
+	if userForgotPass.ID == "" {
+		return &utils.NotValidEmailError{}
+	}
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
+	if err != nil {
+		userForgotPass.Password = string(passwordHash)
+	}
+	fmt.Println("berhasil ganti password")
+	return u.userRepo.UpdateByEmail(userForgotPass)
+
 }
 
 func (s *userUseCase) Login(input *dto.LoginRequestBody) (model.User, error) {
