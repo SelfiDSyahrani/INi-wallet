@@ -3,21 +3,15 @@ package controller
 import (
 	"INi-Wallet/dto"
 	"INi-Wallet/model"
-
-	// "INi-Wallet/service"
 	"INi-Wallet/usecase"
 	"INi-Wallet/utils"
-
-	// "path/filepath"
-
-	// "fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
-	userUC        usecase.UserUseCase
+	userUC usecase.UserUseCase
 	// tokenGenerate utils.TokenUtils
 	// jwt    service.JWTService
 }
@@ -92,8 +86,8 @@ func (cc *UserController) forgotPass(ctx *gin.Context) {
 		}
 		utils.HandleSuccessCreated(ctx, "Success Reset Password", input)
 	}
-
 }
+
 func (cc *UserController) getAllUser(ctx *gin.Context) {
 	users, err := cc.userUC.GetAllUsers()
 	if err != nil {
@@ -130,7 +124,7 @@ func NewUserController(router *gin.Engine, usecase usecase.UserUseCase) *UserCon
 	rG := router.Group("api/v1/eWallet")
 	rG.GET("/users", newcontroller.getAllUser)
 	rG.GET("/user/:id", newcontroller.getUserById)
-	rG.GET("/user/:email", newcontroller.getByEmail)
+	rG.GET("/user/id/:email", newcontroller.getByEmail)
 	rG.POST("/register", newcontroller.registerCustomer)
 	rG.POST("/login", newcontroller.loginUser)
 	// rG2 := router.Group("api/v1/eWallet/user:id", newcontroller.getUserById)

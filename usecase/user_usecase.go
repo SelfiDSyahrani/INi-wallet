@@ -74,13 +74,11 @@ func (u *userUseCase) ForgotPass(input *dto.ForgotPasswordRequestBody) error {
 	if err != nil {
 		return err
 	}
-	if userForgotPass.ID == "" {
-		return &utils.NotValidEmailError{}
-	}
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(input.NewPassword), bcrypt.MinCost)
 	if err != nil {
-		userForgotPass.Password = string(passwordHash)
+		return &utils.NotValidEmailError{}
 	}
+	userForgotPass.Password = string(passwordHash)
 	fmt.Println("berhasil ganti password")
 	return u.userRepo.UpdateByEmail(userForgotPass)
 

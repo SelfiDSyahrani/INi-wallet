@@ -24,7 +24,6 @@ func Server() *appServer {
 		engine:         ginEngine,
 		useCaseManager: usecase,
 	}
-
 }
 
 func (a *appServer) initHandlers() {
